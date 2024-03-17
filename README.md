@@ -1,4 +1,4 @@
-# Basic [VK Bridge](https://github.com/VKCOM/vk-bridge) + [VKUI](https://github.com/VKCOM/VKUI) + [VK Miniapps Router](https://github.com/VKCOM/vk-mini-apps-router) app
+# Internship Mini App
 
 Этот шаблон предоставляет базовый код и настройки для создания мини-приложения внутри ВКонтакте.  
 В качестве сборщика проекта выступает [Vite](https://vite-docs-ru.vercel.app/guide/), подробнее про его конфигурацию и дополнительные плагины можно прочитать [здесь](https://vite-docs-ru.vercel.app/config/) и [здесь]().
@@ -15,10 +15,12 @@ git clone git@github.com:AlekseyVakht/internship-mini-app.git
 cd ~/internsip-mini-app
 ```
 
-Находясь в папке репозитория, запустите ваш мини апп
+Находясь в папке репозитория, запустите ваш мини апп (в зависимости от менеджера, который используете)
 
 ```sh
 yarn start
+```
+```sh
 npm run start
 ```
 
@@ -34,7 +36,8 @@ npm run start
 ```sh
 yarn global add @vkontakte/vk-tunnel
 yarn run tunnel
-
+```
+```sh
 npm i @vkontakte/vk-tunnel -g
 npm run tunnel
 ```
@@ -45,6 +48,8 @@ npm run tunnel
 
 ```sh
 yarn run deploy
+```
+```sh
 npm run deploy
 ```
 
