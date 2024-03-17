@@ -12,10 +12,7 @@ import {
 } from "@vkontakte/vkui";
 import { fetchData } from "../utils/api";
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router";
-
-interface FactData {
-  fact: string;
-}
+import { FactData } from "../utils/interfaces";
 
 export const Facts: FC<{ id: string }> = ({ id }) => {
   const routeNavigator = useRouteNavigator();

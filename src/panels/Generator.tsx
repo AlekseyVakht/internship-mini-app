@@ -1,14 +1,11 @@
-import { FC, FormEvent, useEffect, useState} from "react";
-import { useQuery } from "@tanstack/react-query";
-import {
-  useForm,
-  Controller,
-  SubmitHandler,
-} from "react-hook-form";
+import React, { FC, FormEvent, useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useDebouncedCallback } from "use-debounce";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { fetchData } from "../utils/api";
 import { schema } from "../utils/validation";
+import { LoaderProps, FormInput, AgeData } from "../utils/interfaces";
 
 import {
   Panel,
@@ -26,21 +23,34 @@ import {
 } from "@vkontakte/vkui";
 import { useRouteNavigator } from "@vkontakte/vk-mini-apps-router";
 
-type FormInput = {
-  firstname: string;
-};
+const Loader: FC<LoaderProps> = ({ onClick }) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    onClick(e);
+  };
 
-type AgeData = {
-  age: number;
+  return (
+    <Div>
+      <Spinner size="large" style={{ marginTop: "20px" }} />
+      <Button
+        size="m"
+        style={{ marginTop: "20px" }}
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e)}
+      >
+        Отмена
+      </Button>
+    </Div>
+  );
 };
 
 export const Generator: FC<{ id: string }> = ({ id }) => {
   const [query, setQuery] = useState("");
-  const [age, setAge] = useState(0);
+  const [cancelled, setIsCancelled] = useState(false);
+  const queryClient = useQueryClient();
+  const [age, setAge] = useState("0");
   const routeNavigator = useRouteNavigator();
   const onChangeDebounce = useDebouncedCallback((value) => {
     if (isValid) {
-      setQuery(value);
+      onSubmit({ firstname: value });
     }
   }, 3000);
 
@@ -61,21 +71,37 @@ export const Generator: FC<{ id: string }> = ({ id }) => {
       fetchData({ signal, url: "https://api.agify.io/", name: query }),
     refetchOnWindowFocus: false,
     enabled: !!query,
-    staleTime: 60000,
+    staleTime: 120000,
   });
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
+    setIsCancelled(false);
     const { value } = e.currentTarget;
     onChangeDebounce(value);
   };
 
+  const handleCancelQuery = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsCancelled(true);
+    queryClient.cancelQueries({ queryKey: ["firstname"] });
+  };
+
   const onSubmit: SubmitHandler<FormInput> = (data) => {
-    setQuery(data.firstname);
+    if (!cancelled) {
+      setQuery(data.firstname);
+    } else {
+      setQuery(data.firstname);
+      queryClient.fetchQuery({ queryKey: ["firstname", query] });
+      setIsCancelled(false);
+    }
   };
 
   useEffect(() => {
     if (data) {
       setAge(data.age);
+    }
+    if (data?.age === null) {
+      setAge("по данному запросу возраст не генерируется");
     }
   }, [data]);
 
@@ -126,7 +152,7 @@ export const Generator: FC<{ id: string }> = ({ id }) => {
         </form>
         <div style={{ padding: "20px 0", textAlign: "center" }}>
           <Paragraph>Ваш возраст: {isFetched && age}</Paragraph>
-          {isFetching && <Spinner size="large" style={{ marginTop: "20px" }} />}
+          {isFetching && <Loader onClick={handleCancelQuery} />}
         </div>
       </Group>
     </Panel>

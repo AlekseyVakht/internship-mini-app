@@ -1,11 +1,6 @@
 import { sleep } from "./sleep";
+import { Api } from "./interfaces";
 import axios from "axios";
-
-type Api = {
-  signal?: AbortSignal;
-  name?: string;
-  url: string;
-};
 
 export const fetchData = async <T>(api: Api): Promise<T> => {
   await sleep(1000);
