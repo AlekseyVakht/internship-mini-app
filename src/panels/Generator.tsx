@@ -49,6 +49,9 @@ export const Generator: FC<{ id: string }> = ({ id }) => {
   const [age, setAge] = useState("0");
   const routeNavigator = useRouteNavigator();
   const onChangeDebounce = useDebouncedCallback((value) => {
+    if (cancelled) {
+      return
+    }
     if (isValid) {
       onSubmit({ firstname: value });
     }
