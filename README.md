@@ -20,6 +20,7 @@ cd ~/internsip-mini-app
 
 
 ```sh
+yarn install
 npm install
 ```
 
