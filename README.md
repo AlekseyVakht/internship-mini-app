@@ -16,6 +16,13 @@ git clone git@github.com:AlekseyVakht/internship-mini-app.git
 cd ~/internsip-mini-app
 ```
 
+Установите зависимости
+
+
+```sh
+nom install
+```
+
 Находясь в папке репозитория, запустите ваш мини апп (в зависимости от менеджера, который используете)
 
 ```sh
